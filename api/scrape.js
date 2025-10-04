@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0 Safari/537.36"
       }
     });
 
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       console.log("Gefundenes Datum:", date);
       if (date) {
         nextAppointment = date;
-        return false;
+        return false; // stop after first match
       }
     });
 
@@ -40,7 +40,6 @@ export default async function handler(req, res) {
       link: url,
       scrapedAt: new Date().toISOString()
     });
-
   } catch (error) {
     console.error("Fehler im Scraper:", error);
     res.status(500).json({ ok: false, error: error.message });

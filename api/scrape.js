@@ -1,16 +1,18 @@
-import fetch from "node-fetch";
-import cheerio from "cheerio";
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 export default async function handler(req, res) {
   try {
-    const url = "https://www.doctolib.de/plastische-und-asthetische-chirurgie/bremen/amir-farhang-gharagozlou/booking/new-patient?specialityId=1297&bookingFunnelSource=profile";
+    const url =
+      "https://www.doctolib.de/plastische-und-asthetische-chirurgie/bremen/amir-farhang-gharagozlou/booking/new-patient?specialityId=1297&bookingFunnelSource=profile";
 
     console.log("Starte Fetch:", url);
 
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0 Safari/537.36"
-      }
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0 Safari/537.36",
+      },
     });
 
     console.log("Fetch abgeschlossen, Status:", response.status);
@@ -22,15 +24,16 @@ export default async function handler(req, res) {
     const html = await response.text();
     console.log("HTML-Länge:", html.length);
 
+    const cheerio = await import("cheerio");
     const $ = cheerio.load(html);
-    let nextAppointment = null;
 
-    $('time').each((i, el) => {
+    let nextAppointment = null;
+    $("time").each((i, el) => {
       const date = $(el).attr("datetime");
       console.log("Gefundenes Datum:", date);
       if (date) {
         nextAppointment = date;
-        return false; // stop after first match
+        return false; // Stoppe nach erstem Termin
       }
     });
 
@@ -38,7 +41,7 @@ export default async function handler(req, res) {
       ok: true,
       nextAppointment,
       link: url,
-      scrapedAt: new Date().toISOString()
+      scrapedAt: new Date().toISOString(),
     });
   } catch (error) {
     console.error("Fehler im Scraper:", error);

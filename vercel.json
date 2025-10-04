@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/scrape.js": {
-      "schedule": "*/5 * * * *"
-    }
-  }
-}

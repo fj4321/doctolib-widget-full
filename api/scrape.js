@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
-import fs from 'fs';
-import path from 'path';
 
 export default async function handler(req, res) {
   try {
@@ -14,12 +12,12 @@ export default async function handler(req, res) {
 
     let nextAppointment = null;
 
-    // Beispiel: Suche nach Datum im HTML (angepasst je nach Struktur von Doctolib)
+    // Prüft, ob ein Datum im HTML vorhanden ist
     $('time').each((i, el) => {
       const date = $(el).attr('datetime');
       if (date) {
         nextAppointment = date;
-        return false; // erste finden → abbrechen
+        return false; // Stop bei erstem Treffer
       }
     });
 
@@ -29,9 +27,6 @@ export default async function handler(req, res) {
       link: url,
       scrapedAt: new Date().toISOString()
     };
-
-    const cachePath = path.join(process.cwd(), 'cache', 'termine.json');
-    fs.writeFileSync(cachePath, JSON.stringify(result, null, 2));
 
     res.status(200).json(result);
 

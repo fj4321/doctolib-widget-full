@@ -1,0 +1,12 @@
+{
+  "name": "doctolib-widget-full",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "vercel dev",
+    "test": "node -v"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
